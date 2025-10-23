@@ -1,5 +1,5 @@
 if game.PlaceId ~= 2788229376 then
-  game:GetService('Players').LocalPlayer:Kick('wrong game retard')
+  game:GetService('Players').LocalPlayer:Kick('wrong game')
   return
 end
 
@@ -23,6 +23,7 @@ local w = p.LocalPlayer
 local isHost = string.lower(w.Name) == string.lower(host)
 local r = game:GetService('RunService')
 local u = game:GetService('TextChatService')
+local chatService = game:GetService('Chat')
 local x = w.Character or w.CharacterAdded:Wait()
 local y = x and x:WaitForChild('HumanoidRootPart')
 local z = x and x:WaitForChild('Humanoid')
@@ -96,7 +97,7 @@ local function train() resetState() moveToPosition(Vector3.new(636, 47 - 5, -80)
 local function casino() resetState() moveToPosition(Vector3.new(-865.8, 22.0, -142.0), 4.8) end
 
 local function start()
-  if enabled then
+  if dropping then
     local args = {
       [1] = "DropMoney",
       [2] = 15000
@@ -133,10 +134,10 @@ local function handleCommand(msg)
     elseif loc == 'casino' then casino()
     end
   elseif cmd == 'start' then
-    enabled = true
+    dropping = true
     start()
   elseif cmd == 'stop' then
-    enabled = false
+    dropping = false
   end
 end
 
@@ -144,7 +145,14 @@ local function onCharacterAdded(char)
   x = char
   y = char:WaitForChild('HumanoidRootPart')
   z = char:WaitForChild('Humanoid')
-  if y and z then method6() end
+  if y and z then
+    method6()
+    z.Died:Connect(function()
+      local camera = game.Workspace.CurrentCamera
+      camera.CameraType = Enum.CameraType.Scriptable
+      camera.CFrame = CFrame.new(0, -5000000, 0)
+    end)
+  end
 end
 
 local chan = u and u.TextChannels and (u.TextChannels.RBXGeneral or u.TextChannels.RBXSystem)
@@ -158,6 +166,12 @@ if chan then
     end
   end)
 end
+
+chatService.Chatted:Connect(function(player, message)
+  if player and string.lower(player.Name) == string.lower(host) then
+    pcall(handleCommand, message)
+  end
+end)
 
 w.CharacterAdded:Connect(onCharacterAdded)
 method6()
