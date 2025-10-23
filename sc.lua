@@ -1,5 +1,5 @@
 if game.PlaceId ~= 2788229376 then
-  game:GetService('Players').LocalPlayer:Kick('wrong game')
+  game:GetService('Players').LocalPlayer:Kick('wrong game retard')
   return
 end
 
@@ -7,7 +7,7 @@ local function check()
   return getgenv().script_key == 'qCqkyJnsIdGuValXkmeYLEcN' and getgenv().host and getgenv().host ~= ''
 end
 if not check() then
-  game:GetService('Players').LocalPlayer:Kick('ERROR')
+  game:GetService('Players').LocalPlayer:Kick('hi')
   return
 end
 
@@ -87,7 +87,6 @@ local function cell() resetState() moveToPosition(Vector3.new(-295, 21 - 3, -111
 local function cell2() resetState() moveToPosition(Vector3.new(-295, 22 - 3, -68), 5) end
 local function school() resetState() moveToPosition(Vector3.new(-654, 21 - 3, 256), 5) end
 local function train() resetState() moveToPosition(Vector3.new(636, 47 - 5, -80), 5) end
-local function casino() resetState() moveToPosition(Vector3.new(-865.8, 22.0, -142.0), 5.4) end
 
 local function start()
   if dropping then
@@ -124,7 +123,6 @@ local function handleCommand(msg)
     elseif loc == 'cell2' then cell2()
     elseif loc == 'school' then school()
     elseif loc == 'train' then train()
-    elseif loc == 'casino' then casino()
     end
   elseif cmd == 'start' then
     dropping = true
