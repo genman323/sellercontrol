@@ -87,7 +87,7 @@ local function cell() resetState() moveToPosition(Vector3.new(-295, 21 - 3, -111
 local function cell2() resetState() moveToPosition(Vector3.new(-295, 22 - 3, -68), 5) end
 local function school() resetState() moveToPosition(Vector3.new(-654, 21 - 3, 256), 5) end
 local function train() resetState() moveToPosition(Vector3.new(636, 47 - 5, -80), 5) end
-local function casino() resetState() moveToPosition(Vector3.new(-865.8, 22.0, -142.0), 5) end
+local function casino() resetState() moveToPosition(Vector3.new(-865.8, 22.0, -142.0), 5.4) end
 
 local function start()
   if dropping then
