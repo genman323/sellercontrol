@@ -3,24 +3,17 @@ if game.PlaceId ~= 2788229376 then
   return
 end
 
-local script_key = 'qCqkyJnsIdGuValXkmeYLEcN'
-local host = 'username'
-
 local function check()
-  return script_key == 'qCqkyJnsIdGuValXkmeYLEcN' and host and host ~= ''
+  return getgenv().script_key == 'qCqkyJnsIdGuValXkmeYLEcN' and getgenv().host and getgenv().host ~= ''
 end
 if not check() then
-  game:GetService('Players').LocalPlayer:Kick('Invalid Key.')
-  return
-end
-if not host or host == '' then
-  game:GetService('Players').LocalPlayer:Kick('Host not defined.')
+  game:GetService('Players').LocalPlayer:Kick('ERROR')
   return
 end
 
 local p = game:GetService('Players')
 local w = p.LocalPlayer
-local isHost = string.lower(w.Name) == string.lower(host)
+local isHost = string.lower(w.Name) == string.lower(getgenv().host)
 local r = game:GetService('RunService')
 local u = game:GetService('TextChatService')
 local chatService = game:GetService('Chat')
@@ -160,7 +153,7 @@ if chan then
   chan.MessageReceived:Connect(function(msg)
     if msg.TextSource and p:GetPlayerByUserId(msg.TextSource.UserId) then
       local sender = p:GetPlayerByUserId(msg.TextSource.UserId)
-      if sender and string.lower(sender.Name) == string.lower(host) then
+      if sender and string.lower(sender.Name) == string.lower(getgenv().host) then
         pcall(handleCommand, msg.Text)
       end
     end
@@ -168,7 +161,7 @@ if chan then
 end
 
 chatService.Chatted:Connect(function(player, message)
-  if player and string.lower(player.Name) == string.lower(host) then
+  if player and string.lower(player.Name) == string.lower(getgenv().host) then
     pcall(handleCommand, message)
   end
 end)
