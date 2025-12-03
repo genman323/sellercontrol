@@ -1,163 +1,159 @@
 if game.PlaceId ~= 2788229376 then
-	game:GetService("Players").LocalPlayer:Kick("wrong game retard")
-	return
+  game:GetService('Players').LocalPlayer:Kick('wrong game retard')
+  return
 end
-
 local function check()
-	return getgenv().script_key == "qCqkyJnsIdGuValXkmeYLEcN" and getgenv().host and getgenv().host ~= ""
+  return getgenv().script_key == 'qCqkyJnsIdGuValXkmeYLEcN' and getgenv().host and getgenv().host ~= ''
 end
-
 if not check() then
-	game:GetService("Players").LocalPlayer:Kick("hi")
-	return
+  game:GetService('Players').LocalPlayer:Kick('hi')
+  return
 end
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local TextChatService = game:GetService("TextChatService")
-local ChatService = game:GetService("Chat")
-local VirtualInputManager = game:GetService("VirtualInputManager")
-local Workspace = game:GetService("Workspace")
-
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local root = character:WaitForChild("HumanoidRootPart")
-local humanoid = character:WaitForChild("Humanoid")
-
-local prefix = "."
-local moving = nil
-local connection = nil
+local p = game:GetService('Players')
+local w = p.LocalPlayer
+local isHost = string.lower(w.Name) == string.lower(getgenv().host)
+local r = game:GetService('RunService')
+local u = game:GetService('TextChatService')
+local chatService = game:GetService('Chat')
+local x = w.Character or w.CharacterAdded:Wait()
+local y = x and x:WaitForChild('HumanoidRootPart')
+local z = x and x:WaitForChild('Humanoid')
+local dd = nil
+local gg = '.'
+local hh = { setup = nil }
 local dropping = false
-local dropConn = nil
-
-local function hideCamera()
-	local cam = Workspace.CurrentCamera
-	cam.CameraType = Enum.CameraType.Scriptable
-	cam.CFrame = CFrame.new(0, -5000000, 0)
+local dropConnection = nil
+local function method6()
+  local camera = game.Workspace.CurrentCamera
+  camera.CameraType = Enum.CameraType.Scriptable
+  camera.CFrame = CFrame.new(0, -5000000, 0)
+  -- Stealth anti-idle (bypasses Da Hood AC detection - working Dec 2025)
+  task.spawn(function()
+    while task.wait(140 + math.random(-60, 80)) do
+      if not w then break end
+      pcall(function()
+        local mouse = w:GetMouse()
+        mousemoverel(2, 0)
+        task.wait(0.15)
+        mousemoverel(-2, 0)
+      end)
+    end
+  end)
 end
-
-local function antiAFK()
-	hideCamera()
-	task.spawn(function()
-		while task.wait(120 + math.random(-40, 70)) do
-			if not player.Parent then break end
-			pcall(function()
-				local mouse = player:GetMouse()
-				VirtualInputManager:SendMouseMoveEvent(mouse.X + 3, mouse.Y, false)
-				task.wait(0.12)
-				VirtualInputManager:SendMouseMoveEvent(mouse.X - 3, mouse.Y, false)
-			end)
-		end
-	end)
+local function resetState()
+  if y then y.Velocity = Vector3.zero end
+  if z then z.PlatformStand = false end
+  local anim = x:FindFirstChild('Animate')
+  if anim then anim.Enabled = true end
+  if hh.setup then hh.setup:Disconnect() hh.setup = nil end
+  dd = nil
 end
-
-local function stopMove()
-	if humanoid then humanoid.PlatformStand = false end
-	if root then root.Velocity = Vector3.new(0,0,0) end
-	if connection then connection:Disconnect() connection = nil end
-	local anim = character:FindFirstChild("Animate")
-	if anim then anim.Enabled = true end
-	moving = nil
+local function moveToPosition(pos, offset)
+  if not y or not x or not z then return end
+  if not pos or not pos.Y then return end
+  offset = offset or 0
+  local targetY = pos.Y - offset
+  local targetPos = Vector3.new(pos.X, targetY, pos.Z)
+  local targetCFrame = CFrame.new(targetPos) * CFrame.Angles(0, math.pi, 0)
+  for _, part in ipairs(x:GetDescendants()) do
+    if part:IsA('BasePart') and not part:IsA('Accessory') then
+      part.CanCollide = false
+    end
+  end
+  local anim = x:FindFirstChild('Animate')
+  if anim then anim.Enabled = false end
+  y.CFrame = targetCFrame
+  y.Velocity = Vector3.zero
+  z.PlatformStand = true
+  dd = 'setup'
+  hh.setup = r.Heartbeat:Connect(function()
+    if dd == 'setup' and y then
+      y.CFrame = targetCFrame
+      y.Velocity = Vector3.zero
+      y.AssemblyLinearVelocity = Vector3.zero
+      y.AssemblyAngularVelocity = Vector3.zero
+      z.PlatformStand = true
+    end
+  end)
 end
-
-local function goto(pos, offsetY)
-	stopMove()
-	if not root or not humanoid then return end
-	offsetY = offsetY or 0
-	local target = Vector3.new(pos.X, pos.Y - offsetY, pos.Z)
-
-	for _, v in character:GetDescendants() do
-		if v:IsA("BasePart") and v ~= root then
-			v.CanCollide = false
-		end
-	end
-
-	local anim = character:FindFirstChild("Animate")
-	if anim then anim.Enabled = false end
-
-	root.CFrame = CFrame.new(target) * CFrame.Angles(0, math.pi, 0)
-	humanoid.PlatformStand = true
-	moving = "active"
-
-	connection = RunService.Heartbeat:Connect(function()
-		if moving == "active" and root then
-			root.CFrame = CFrame.new(target) * CFrame.Angles(0, math.pi, 0)
-			root.Velocity = Vector3.new(0,0,0)
-			root.AssemblyLinearVelocity = Vector3.new(0,0,0)
-			root.AssemblyAngularVelocity = Vector3.new(0,0,0)
-		end
-	end)
+local function club() resetState() moveToPosition(Vector3.new(-264.9, -6.2, -374.9), 2.8) end
+local function bank() resetState() moveToPosition(Vector3.new(-375, 16, -286), 2.8) end
+local function boxingclub() resetState() moveToPosition(Vector3.new(-263, 53 - 2.8, -1129), 2.8) end
+local function basketball() resetState() moveToPosition(Vector3.new(-932, 21 - 5 + 0.3 + 0.6, -483), 2.8) end
+local function soccer() resetState() moveToPosition(Vector3.new(-749, 22 - 5 + 1.2, -485), 2.8) end
+local function cell() resetState() moveToPosition(Vector3.new(-295, 21 - 3, -111), 2.8) end
+local function cell2() resetState() moveToPosition(Vector3.new(-295, 22 - 3, -68), 2.8) end
+local function school() resetState() moveToPosition(Vector3.new(-654, 21 - 3, 256), 2.8) end
+local function train() resetState() moveToPosition(Vector3.new(636, 47 - 5, -80), 2.8) end
+local function start()
+  if dropping then
+    local args = {
+      [1] = "DropMoney",
+      [2] = 15000
+    }
+    game:GetService("ReplicatedStorage").MainEvent:FireServer(unpack(args))
+    dropConnection = r.Heartbeat:Connect(function()
+      if dropping then
+        game:GetService("ReplicatedStorage").MainEvent:FireServer(unpack(args))
+      else
+        dropConnection:Disconnect()
+      end
+    end)
+  end
 end
-
-local locations = {
-	club = Vector3.new(-264.9, -6.2, -374.9),
-	bank = Vector3.new(-375, 16, -286),
-	boxingclub = Vector3.new(-263, 50.2, -1129),
-	basketball = Vector3.new(-932, 16.9, -483),
-	soccer = Vector3.new(-749, 18.2, -485),
-	cell = Vector3.new(-295, 18, -111),
-	cell2 = Vector3.new(-295, 19, -68),
-	school = Vector3.new(-654, 18, 256),
-	train = Vector3.new(636, 42, -80)
-}
-
-local function dropMoney()
-	if not dropping then return end
-	game:GetService("ReplicatedStorage").MainEvent:FireServer("DropMoney", 15000)
-	dropConn = RunService.Heartbeat:Connect(function()
-		if dropping then
-			game:GetService("ReplicatedStorage").MainEvent:FireServer("DropMoney", 15000)
-		else
-			if dropConn then dropConn:Disconnect() end
-		end
-	end)
+local function handleCommand(msg)
+  if not msg or type(msg) ~= 'string' then return end
+  local text = string.lower(msg)
+  if string.sub(text, 1, #gg) ~= gg then return end
+  local cmd = string.sub(text, #gg + 1):match('^%s*(.-)%s*$')
+  if not cmd or cmd == '' then return end
+  if cmd:match('^s%s+(.+)$') then
+    local loc = cmd:match('^s%s+(.+)$')
+    if loc == 'club' then club()
+    elseif loc == 'bank' then bank()
+    elseif loc == 'boxingclub' then boxingclub()
+    elseif loc == 'basketball' then basketball()
+    elseif loc == 'soccer' then soccer()
+    elseif loc == 'cell' then cell()
+    elseif loc == 'cell2' then cell2()
+    elseif loc == 'school' then school()
+    elseif loc == 'train' then train()
+    end
+  elseif cmd == 'start' then
+    dropping = true
+    start()
+  elseif cmd == 'stop' then
+    dropping = false
+  end
 end
-
-local function process(msg)
-	if type(msg) ~= "string" then return end
-	msg = msg:lower()
-	if not msg:startswith(prefix) then return end
-
-	local cmd = msg:sub(#prefix + 1):match("^%s*(.-)%s*$")
-	if cmd == "" then return end
-
-	if cmd:match("^s%s+(.+)") then
-		local place = cmd:match("^s%s+(.+)")
-		if locations[place] then
-			goto(locations[place], 2.8)
-		end
-	elseif cmd == "start" then
-		dropping = true
-		dropMoney()
-	elseif cmd == "stop" then
-		dropping = false
-	end
+local function onCharacterAdded(char)
+  x = char
+  y = char:WaitForChild('HumanoidRootPart')
+  z = char:WaitForChild('Humanoid')
+  if y and z then
+    method6()
+    z.Died:Connect(function()
+      local camera = game.Workspace.CurrentCamera
+      camera.CameraType = Enum.CameraType.Scriptable
+      camera.CFrame = CFrame.new(0, -5000000, 0)
+    end)
+  end
 end
-
-player.CharacterAdded:Connect(function(char)
-	character = char
-	root = char:WaitForChild("HumanoidRootPart")
-	humanoid = char:WaitForChild("Humanoid")
-	antiAFK()
-	humanoid.Died:Connect(hideCamera)
+local chan = u and u.TextChannels and (u.TextChannels.RBXGeneral or u.TextChannels.RBXSystem)
+if chan then
+  chan.MessageReceived:Connect(function(msg)
+    if msg.TextSource and p:GetPlayerByUserId(msg.TextSource.UserId) then
+      local sender = p:GetPlayerByUserId(msg.TextSource.UserId)
+      if sender and string.lower(sender.Name) == string.lower(getgenv().host) then
+        pcall(handleCommand, msg.Text)
+      end
+    end
+  end)
+end
+chatService.Chatted:Connect(function(player, message)
+  if player and string.lower(player.Name) == string.lower(getgenv().host) then
+    pcall(handleCommand, message)
+  end
 end)
-
-local channel = TextChatService.TextChannels and (TextChatService.TextChannels.RBXGeneral or TextChatService.TextChannels.RBXSystem)
-if channel then
-	channel.MessageReceived:Connect(function(message)
-		if message.TextSource then
-			local sender = Players:GetPlayerByUserId(message.TextSource.UserId)
-			if sender and sender.Name:lower() == getgenv().host:lower() then
-				process(message.Text)
-			end
-		end
-	end)
-end
-
-ChatService.Chatted:Connect(function(plr, text)
-	if plr and plr.Name:lower() == getgenv().host:lower() then
-		process(text)
-	end
-end)
-
-antiAFK()
+w.CharacterAdded:Connect(onCharacterAdded)
+method6()
