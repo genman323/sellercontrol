@@ -27,7 +27,6 @@ local function method6()
   local camera = game.Workspace.CurrentCamera
   camera.CameraType = Enum.CameraType.Scriptable
   camera.CFrame = CFrame.new(0, -5000000, 0)
-  -- Stealth anti-idle (bypasses Da Hood AC detection - working Dec 2025)
   task.spawn(function()
     while task.wait(140 + math.random(-60, 80)) do
       if not w then break end
