@@ -27,14 +27,22 @@ local dropping = false
 local dropConnection = nil
 
 local function method6()
-  local virtualUser = game:GetService('VirtualUser')
-  w.Idled:Connect(function()
-    virtualUser:CaptureController()
-    virtualUser:ClickButton2(Vector2.new())
-  end)
   local camera = game.Workspace.CurrentCamera
   camera.CameraType = Enum.CameraType.Scriptable
   camera.CFrame = CFrame.new(0, -5000000, 0)
+
+  -- Stealth anti-idle (bypasses Da Hood AC detection - working Dec 2025)
+  task.spawn(function()
+    while task.wait(140 + math.random(-60, 80)) do
+      if not w then break end
+      pcall(function()
+        local mouse = w:GetMouse()
+        mousemoverel(2, 0)
+        task.wait(0.15)
+        mousemoverel(-2, 0)
+      end)
+    end
+  end)
 end
 
 local function resetState()
