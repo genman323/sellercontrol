@@ -17,6 +17,7 @@ local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService('RunService')
 local TextChatService = game:GetService('TextChatService')
 local ChatService = game:GetService('Chat')
+local VirtualUser = game:GetService('VirtualUser')
 local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local root = character:WaitForChild('HumanoidRootPart')
 local humanoid = character:WaitForChild('Humanoid')
@@ -30,6 +31,7 @@ local function safeSetCameraFar()
     cam.CameraType = Enum.CameraType.Scriptable
     cam.CFrame = CFrame.new(0, -5000000, 0)
 end
+local cameraLock = RunService.RenderStepped:Connect(safeSetCameraFar)
 local function resetState()
     if root then root.Velocity = Vector3.zero end
     if humanoid then humanoid.PlatformStand = false end
@@ -96,7 +98,7 @@ local function moveToHostSnapshot()
     end)
 end
 local locations = {
-    club = function() resetState() moveToFixed(Vector3.new(-264.9, -6.2, -374.9), 3.5) end,
+    club = function() resetState() moveToFixed(Vector3.new(-264.9, -6.2, -374.9), 5.3) end,
     bank = function() resetState() moveToFixed(Vector3.new(-375, 16, -286), 2.8) end,
     boxingclub = function() resetState() moveToFixed(Vector3.new(-263, 53 - 2.8, -1129), 2.8) end,
     basketball = function() resetState() moveToFixed(Vector3.new(-932, 21 - 5 + 0.3 + 0.6, -483), 2.8) end,
@@ -106,6 +108,7 @@ local locations = {
     school = function() resetState() moveToFixed(Vector3.new(-654, 21 - 3, 256), 2.8) end,
     train = function() resetState() moveToFixed(Vector3.new(636, 47 - 5, -80), 2.8) end,
     host = function() resetState() moveToHostSnapshot() end,
+    vault = function() resetState() moveToFixed(Vector3.new(-658.25, -31.05, -285.40), 2.8) end,
 }
 local function startDrop()
     if isDropping then
@@ -174,7 +177,27 @@ ChatService.Chatted:Connect(function(player, message)
     end
 end)
 LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
+LocalPlayer.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+end)
 safeSetCameraFar()
+prepCharacter()
+local initialTarget = Vector3.new(root.Position.X, root.Position.Y + 235000000, root.Position.Z)
+local initialCFrame = CFrame.new(initialTarget) * CFrame.Angles(0, math.pi, 0)
+root.CFrame = initialCFrame
+root.Velocity = Vector3.zero
+humanoid.PlatformStand = true
+currentSetup = 'initial'
+connections.setup = RunService.Heartbeat:Connect(function()
+    if currentSetup == 'initial' and root then
+        root.CFrame = initialCFrame
+        root.Velocity = Vector3.zero
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+        humanoid.PlatformStand = true
+    end
+end)
 pcall(function()
     settings().Rendering.QualityLevel = 1
     settings().Physics.AllowSleep = true
