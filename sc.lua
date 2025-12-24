@@ -2,10 +2,9 @@ if game.PlaceId ~= 2788229376 then
     game:GetService('Players').LocalPlayer:Kick('wrong game retard')
     return
 end
-local env = getgenv()
 local requiredKey = 'qCqkyJnsIdGuValXkmeYLEcN'
-local hostVar = env.host
-local scriptKey = env.script_key
+local hostVar = host or getgenv().host
+local scriptKey = script_key or getgenv().script_key
 local function isValid()
     return scriptKey == requiredKey and hostVar and hostVar ~= ''
 end
