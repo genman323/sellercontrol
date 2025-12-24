@@ -85,16 +85,16 @@ local function moveToHost()
                 local target = Vector3.new(hostPos.X, targetY, hostPos.Z)
                 local targetCFrame = CFrame.new(target) * CFrame.Angles(0, math.pi, 0)
                 root.CFrame = targetCFrame
+                root.Velocity = Vector3.zero
+                root.AssemblyLinearVelocity = Vector3.zero
+                root.AssemblyAngularVelocity = Vector3.zero
+                humanoid.PlatformStand = true
             end
-            root.Velocity = Vector3.zero
-            root.AssemblyLinearVelocity = Vector3.zero
-            root.AssemblyAngularVelocity = Vector3.zero
-            humanoid.PlatformStand = true
         end
     end)
 end
 local locations = {
-    club = function() resetState() moveToFixed(Vector3.new(-264.9, -6.2, -374.9), 2.8) end,
+    club = function() resetState() moveToFixed(Vector3.new(-264.9, -6.2, -374.9), 3.3) end,
     bank = function() resetState() moveToFixed(Vector3.new(-375, 16, -286), 2.8) end,
     boxingclub = function() resetState() moveToFixed(Vector3.new(-263, 53 - 2.8, -1129), 2.8) end,
     basketball = function() resetState() moveToFixed(Vector3.new(-932, 21 - 5 + 0.3 + 0.6, -483), 2.8) end,
