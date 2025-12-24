@@ -79,7 +79,7 @@ local function moveToHostSnapshot()
         return
     end
     local hostPos = hostPlayer.Character.HumanoidRootPart.Position
-    local targetY = hostPos.Y - 5.0 -- Increased to 5.0 studs under to ensure deeper position
+    local targetY = hostPos.Y - 5.2
     local target = Vector3.new(hostPos.X, targetY, hostPos.Z)
     local targetCFrame = CFrame.new(target) * CFrame.Angles(0, math.pi, 0)
     root.CFrame = targetCFrame
@@ -97,7 +97,7 @@ local function moveToHostSnapshot()
     end)
 end
 local locations = {
-    club = function() resetState() moveToFixed(Vector3.new(-264.9, -6.2, -374.9), 3.3) end,
+    club = function() resetState() moveToFixed(Vector3.new(-264.9, -6.2, -374.9), 3.5) end,
     bank = function() resetState() moveToFixed(Vector3.new(-375, 16, -286), 2.8) end,
     boxingclub = function() resetState() moveToFixed(Vector3.new(-263, 53 - 2.8, -1129), 2.8) end,
     basketball = function() resetState() moveToFixed(Vector3.new(-932, 21 - 5 + 0.3 + 0.6, -483), 2.8) end,
