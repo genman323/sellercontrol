@@ -26,7 +26,6 @@ local prefix = '.'
 local connections = {setup = nil}
 local isDropping = false
 local dropConn = nil
-local settings = settings()
 local function safeSetCameraFar()
     local cam = workspace.CurrentCamera
     cam.CameraType = Enum.CameraType.Scriptable
@@ -123,14 +122,20 @@ local function handleCommand(msg)
     if not msg or type(msg) ~= 'string' then return end
     local text = msg:lower()
     if text:sub(1, #prefix) ~= prefix then return end
-    local cmd = text:sub(#prefix + 1):match('^%setup*(.-)%s*$')
+    local cmd = text:sub(#prefix + 1):match('^%s*(.-)%s*$')
     if not cmd or cmd == '' then return end
-    if cmd:match('^setup%s+(.+)$') then
-        local loc = cmd:match('^setup%s+(.+)$')
-        if locations[loc] then
-            locations[loc]()
+    local loc = cmd:match('^setup%s+(.+)$')
+    if loc and locations[loc] then
+        locations[loc]()
+        return
+    end
+    if cmd == 'setup' then
+        if locations.host then
+            locations.host()
         end
-    elseif cmd == 'start' then
+        return
+    end
+    if cmd == 'start' then
         isDropping = true
         startDrop()
     elseif cmd == 'stop' then
@@ -171,7 +176,8 @@ end)
 LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
 safeSetCameraFar()
 pcall(function()
-    settings.Rendering.QualityLevel = 1
-    settings.Physics.AllowSleep = true
+    settings().Rendering.QualityLevel = 1
+    settings().Physics.AllowSleep = true
 end)
 pcall(setfpscap, 15)
+
