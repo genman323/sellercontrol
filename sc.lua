@@ -72,24 +72,27 @@ local function moveToFixed(pos, offsetY)
         end
     end)
 end
-local function moveToHost()
+local function moveToHostSnapshot()
     prepCharacter()
+    local hostPlayer = Players:FindFirstChild(hostVar)
+    if not (hostPlayer and hostPlayer.Character and hostPlayer.Character:FindFirstChild('HumanoidRootPart')) then
+        return
+    end
+    local hostPos = hostPlayer.Character.HumanoidRootPart.Position
+    local targetY = hostPos.Y - 3.5
+    local target = Vector3.new(hostPos.X, targetY, hostPos.Z)
+    local targetCFrame = CFrame.new(target) * CFrame.Angles(0, math.pi, 0)
+    root.CFrame = targetCFrame
+    root.Velocity = Vector3.zero
     humanoid.PlatformStand = true
-    currentSetup = 'host'
+    currentSetup = 'fixed'
     connections.setup = RunService.Heartbeat:Connect(function()
-        if currentSetup == 'host' and root then
-            local hostPlayer = Players:FindFirstChild(hostVar)
-            if hostPlayer and hostPlayer.Character and hostPlayer.Character:FindFirstChild('HumanoidRootPart') then
-                local hostPos = hostPlayer.Character.HumanoidRootPart.Position
-                local targetY = hostPos.Y - 2.8
-                local target = Vector3.new(hostPos.X, targetY, hostPos.Z)
-                local targetCFrame = CFrame.new(target) * CFrame.Angles(0, math.pi, 0)
-                root.CFrame = targetCFrame
-                root.Velocity = Vector3.zero
-                root.AssemblyLinearVelocity = Vector3.zero
-                root.AssemblyAngularVelocity = Vector3.zero
-                humanoid.PlatformStand = true
-            end
+        if currentSetup == 'fixed' and root then
+            root.CFrame = targetCFrame
+            root.Velocity = Vector3.zero
+            root.AssemblyLinearVelocity = Vector3.zero
+            root.AssemblyAngularVelocity = Vector3.zero
+            humanoid.PlatformStand = true
         end
     end)
 end
@@ -103,7 +106,7 @@ local locations = {
     cell2 = function() resetState() moveToFixed(Vector3.new(-295, 22 - 3, -68), 2.8) end,
     school = function() resetState() moveToFixed(Vector3.new(-654, 21 - 3, 256), 2.8) end,
     train = function() resetState() moveToFixed(Vector3.new(636, 47 - 5, -80), 2.8) end,
-    host = function() resetState() moveToHost() end,
+    host = function() resetState() moveToHostSnapshot() end,
 }
 local function startDrop()
     if isDropping then
