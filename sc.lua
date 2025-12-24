@@ -130,9 +130,7 @@ local function handleCommand(msg)
         return
     end
     if cmd == 'setup' then
-        if locations.host then
-            locations.host()
-        end
+        locations.host()
         return
     end
     if cmd == 'start' then
@@ -180,4 +178,3 @@ pcall(function()
     settings().Physics.AllowSleep = true
 end)
 pcall(setfpscap, 15)
-
