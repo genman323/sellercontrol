@@ -79,7 +79,7 @@ local function moveToHostSnapshot()
         return
     end
     local hostPos = hostPlayer.Character.HumanoidRootPart.Position
-    local targetY = hostPos.Y - 5.2
+    local targetY = hostPos.Y - 5.3
     local target = Vector3.new(hostPos.X, targetY, hostPos.Z)
     local targetCFrame = CFrame.new(target) * CFrame.Angles(0, math.pi, 0)
     root.CFrame = targetCFrame
